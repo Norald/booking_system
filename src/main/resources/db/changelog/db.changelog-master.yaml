@@ -1,0 +1,522 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: dev
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: units
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: rooms
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: floor
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: available
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cost
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: markup
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_unit_author
+                    references: users(id)
+
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: unit_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_unit
+                    references: units(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_booking_user
+                    references: users(id)
+              - column:
+                  name: start_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: paid
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: booking_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_payment_booking
+                    references: bookings(id)
+              - column:
+                  name: amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_event_user
+                    references: users(id)
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_event_unit
+                    references: units(id)
+
+  - changeSet:
+      id: 2
+      author: dev
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: password
+                  value: "password123"
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 2
+              - column:
+                  name: type
+                  value: "HOME"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 1000.00
+              - column:
+                  name: markup
+                  value: 150.00
+              - column:
+                  name: description
+                  value: "Cozy home with a garden"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 3
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 5
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 1500.00
+              - column:
+                  name: markup
+                  value: 250.00
+              - column:
+                  name: description
+                  value: "Spacious flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 4
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 4
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 2000.00
+              - column:
+                  name: markup
+                  value: 300.00
+              - column:
+                  name: description
+                  value: "New flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 1
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 500.00
+              - column:
+                  name: markup
+                  value: 75.00
+              - column:
+                  name: description
+                  value: "Flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 2
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 500.00
+              - column:
+                  name: markup
+                  value: 75.00
+              - column:
+                  name: description
+                  value: "Flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 3
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 500.00
+              - column:
+                  name: markup
+                  value: 75.00
+              - column:
+                  name: description
+                  value: "Flat in the city center 3"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 1
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 500.00
+              - column:
+                  name: markup
+                  value: 75.00
+              - column:
+                  name: description
+                  value: "Flat in the city center 4"
+              - column:
+                  name: author_id
+                  value: 1
+
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 5
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 1500.00
+              - column:
+                  name: markup
+                  value: 175.00
+              - column:
+                  name: description
+                  value: "Flat in the city center 5"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 6
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 2500.00
+              - column:
+                  name: markup
+                  value: 475.00
+              - column:
+                  name: description
+                  value: "Flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 1
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 400.00
+              - column:
+                  name: markup
+                  value: 65.00
+              - column:
+                  name: description
+                  value: "Flat in the city center"
+              - column:
+                  name: author_id
+                  value: 1
+
+
+        - insert:
+            tableName: units
+            columns:
+              - column:
+                  name: rooms
+                  value: 1
+              - column:
+                  name: type
+                  value: "FLAT"
+              - column:
+                  name: floor
+                  value: 1
+              - column:
+                  name: available
+                  value: true
+              - column:
+                  name: cost
+                  value: 300.00
+              - column:
+                  name: markup
+                  value: 55.00
+              - column:
+                  name: description
+                  value: "Flat in the city center 15"
+              - column:
+                  name: author_id
+                  value: 1
